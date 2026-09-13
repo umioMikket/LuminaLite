@@ -19,12 +19,23 @@ public class PropertyContainer implements IContainer {
         return waitingProperty != null? waitingProperty.getValue() : null;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T valueProperty(PropertyKey<T> key) {
+        return (T) valueProperty(key.getName(), key.getType());
+    }
+
     @Override
     public <T> T valueProperty(String name, Class<T> type) {
         Property<?> waitingProperty = properties.get(name);
         if (waitingProperty == null) return null;
         Object value = waitingProperty.getValue();
         return value != null? NumberCast.cast(value, type) : null;
+    }
+
+    @Override
+    public boolean addProperty(PropertyKey<?> key, Property<?> property) {
+        return addProperty(key.getName(), property);
     }
 
     @Override
@@ -35,6 +46,11 @@ public class PropertyContainer implements IContainer {
     }
 
     @Override
+    public boolean putProperty(PropertyKey<?> key, Property<?> property) {
+        return putProperty(key.getName(), property);
+    }
+
+    @Override
     public boolean putProperty(String name, Property<?> property) {
         boolean existed = properties.containsKey(name);
         properties.put(name, property);
@@ -42,13 +58,29 @@ public class PropertyContainer implements IContainer {
     }
 
     @Override
+    public boolean removeProperty(PropertyKey<?> key) {
+        return properties.remove(key.getName()) != null;
+    }
+
+    @Override
     public boolean removeProperty(String name) {
         return properties.remove(name) != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> Property<T> getProperty(PropertyKey<T> key) {
+        return (Property<T>) getProperty(key.getName());
     }
 
     @Override
     public Property<?> getProperty(String name) {
         return properties.get(name);
+    }
+
+    @Override
+    public boolean hasProperty(PropertyKey<?> key) {
+        return properties.containsKey(key.getName());
     }
 
     @Override
@@ -66,6 +98,16 @@ public class PropertyContainer implements IContainer {
 
         public Builder() {
             this.properties = new HashMap<>();
+        }
+
+        public Builder property(PropertyKey<?> key, Property<?> property) {
+            properties.put(key.getName(), property);
+            return this;
+        }
+
+        public Builder property(PropertyKey<?> key, Object value) {
+            properties.put(key.getName(), new Property<>(value));
+            return this;
         }
 
         public Builder property(String name, Property<?> property) {

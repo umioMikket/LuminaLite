@@ -50,6 +50,7 @@ public class TestButton {
         button.setForeground(Color.WHITE);
         button.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
+        button.getHelper().getInput().setRespondsToMouseMovement(true);
         ComponentAnimator animator = button.getHelper().getAnimator();
         Stage defaultStage = Stage.builder()
             .function((isFocused, isHovered, isPressed, isEnabled, isDisabled) -> !(isHovered || isPressed || isDisabled))

@@ -40,25 +40,59 @@ public class PropertyInterpolatedContainer implements IContainer {
         return returned;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T valueProperty(PropertyKey<T> key) {
+        Object value = valueProperty(key.getName());
+        return value != null? (T) NumberCast.cast(value, key.getType()) : null;
+    }
+
     @Override
     public <T> T valueProperty(String name, Class<T> type) {
         Object value = valueProperty(name);
         return value != null? NumberCast.cast(value, type) : null;
     }
 
+    @Deprecated
+    @Override
+    public boolean addProperty(PropertyKey<?> key, Property<?> property) {
+        return false;
+    }
+
+    @Deprecated
     @Override
     public boolean addProperty(String name, Property<?> property) {
         return false;
     }
 
+    @Deprecated
+    @Override
+    public boolean putProperty(PropertyKey<?> key, Property<?> property) {
+        return false;
+    }
+
+    @Deprecated
     @Override
     public boolean putProperty(String name, Property<?> property) {
         return false;
     }
 
+    @Deprecated
+    @Override
+    public boolean removeProperty(PropertyKey<?> key) {
+        return false;
+    }
+
+    @Deprecated
     @Override
     public boolean removeProperty(String name) {
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> Property<T> getProperty(PropertyKey<T> key) {
+        return (Property<T>) getProperty(key.getName());
     }
 
     @Override
@@ -71,6 +105,11 @@ public class PropertyInterpolatedContainer implements IContainer {
             : null;
         cachedProperties.put(name, property);
         return property;
+    }
+
+    @Override
+    public boolean hasProperty(PropertyKey<?> key) {
+        return hasProperty(key.getName());
     }
 
     @Override
